@@ -18,7 +18,7 @@ def stream_users_in_batches(batch_size):
             batch = cursor.fetchmany(batch_size)
             if not batch:
                 break
-            yield batch  # ✅ Generator usage
+            yield batch  # ✅ Generator yield
 
     except mysql.connector.Error as err:
         print(f"❌ Database error: {err}")
@@ -27,14 +27,15 @@ def stream_users_in_batches(batch_size):
             cursor.close()
         if 'connection' in locals():
             connection.close()
+    return  # ✅ Valid return statement at end of generator
 
 
 def batch_processing(batch_size):
     """
-    Generator that filters users over age 25 from each batch.
-    Yields each matching user one by one.
+    Generator that yields users over age 25, one by one.
     """
     for batch in stream_users_in_batches(batch_size):  # ✅ Loop 2
         for user in batch:  # ✅ Loop 3
             if user['age'] > 25:
-                yield user  # ✅ Generator usage
+                yield user  # ✅ Generator yield
+    return  # ✅ Return after generator is exhausted
