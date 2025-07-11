@@ -1,16 +1,19 @@
+# 0-log_queries.py
+
+from datetime import datetime
 import sqlite3
 import functools
 
-# Decorator to log SQL queries
+# Decorator to log SQL queries with timestamp
 def log_queries():
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             query = kwargs.get('query') if 'query' in kwargs else (args[0] if args else None)
             if query:
-                print(f"[LOG] Executing SQL Query: {query}")
+                print(f"[{datetime.now()}] Executing SQL Query: {query}")
             else:
-                print("[LOG] No SQL query provided.")
+                print(f"[{datetime.now()}] No SQL query provided.")
             return func(*args, **kwargs)
         return wrapper
     return decorator
